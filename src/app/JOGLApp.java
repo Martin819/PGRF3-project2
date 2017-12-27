@@ -6,6 +6,7 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
@@ -14,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 
@@ -79,9 +81,22 @@ public class JOGLApp {
         int returnValue = jFileChooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = jFileChooser.getSelectedFile();
-            System.out.println(selectedFile.getAbsolutePath());
+            String imagePath = jFileChooser.getSelectedFile().getAbsolutePath();
+            Dimension windowSize = getImageSize(imagePath);
+            ren
         }
 
     }
-
+    private static Dimension getImageSize(String imagePath){
+        BufferedImage readImage = null;
+        int h=0,w=0;
+        try {
+            readImage = ImageIO.read(new File(imagePath));
+            h= readImage.getHeight();
+            w = readImage.getWidth();
+        } catch (Exception e) {
+            readImage = null;
+        }
+        return new Dimension(w, h);
+    }
 }
