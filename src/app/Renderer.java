@@ -16,12 +16,12 @@ public class Renderer implements GLEventListener, MouseListener,
     private int locImageHeight, locImageWidth;
     private float imageHeight=512f, imageWidth=512f;
     private int width, height;
-    private String imagePath;
-    private boolean imageChanged;
+    private String imagePath = "/res/testTexture.jpg";
+    private boolean imageChanged = false;
     private Camera cam = new Camera();
     private Mat4 proj;
     private OGLBuffers buff;
-    private OGLTexture image;
+    private OGLTexture2D image;
     private GL2GL3 gl;
 
     @Override
@@ -38,8 +38,12 @@ public class Renderer implements GLEventListener, MouseListener,
 
         textRenderer = new OGLTextRenderer(gl, glDrawable.getSurfaceWidth(), glDrawable.getSurfaceHeight());
         shaderProgram = ShaderUtils.loadProgram(gl, "/shader");
+        gl.glUseProgram(shaderProgram);
+        locImageHeight = gl.glGetUniformLocation(shaderProgram, "imageHeight");
+        locImageWidth = gl.glGetUniformLocation(shaderProgram, "imageWidth");
 /*        locMatGrid = gl.glGetUniformLocation(shaderProgram, "mat");
         locImage = gl.glGetUniformLocation(shaderProgram, "image");*/
+        createBuffers();
     }
 
     void createBuffers() {
@@ -51,7 +55,7 @@ public class Renderer implements GLEventListener, MouseListener,
         };
         int[] indexBufferData = { 0, 1, 2, 3 };
         OGLBuffers.Attrib[] attributes = {
-                new OGLBuffers.Attrib("inPosition", 2),
+                new OGLBuffers.Attrib("inPos", 2),
         };
         buff = new OGLBuffers(gl, vertexBufferData, attributes,
                 indexBufferData);
@@ -65,29 +69,15 @@ public class Renderer implements GLEventListener, MouseListener,
         gl.glUniform1f(locImageHeight, imageHeight);
         gl.glUniform1f(locImageWidth, imageWidth);
 //        gl.glUniform1f(locEffectIntensity, effectIntesity);
-        if(this.imageChanged){
-            image = new OGLTexture(gl, imagePath) {
-                @Override
-                public void bind(int shaderProgram, String name, int slot) {
-
-                }
-
-                @Override
-                public void bind(int shaderProgram, String name) {
-
-                }
-
-                @Override
-                public int getTextureId() {
-                    return 0;
-                }
-            };
+/*        if(this.imageChanged){*/
+            image = new OGLTexture2D(gl, imagePath);
             this.imageChanged=false;
-        }
-        image.bind(shaderProgram, "texture", 0);
+            image.bind(shaderProgram, "image", 0);
+/*        }*/
+
         // vykresleni
         buff.draw(GL2GL3.GL_QUADS, shaderProgram);
-        textRenderer.drawStr2D(width-220, 3, " (c) Martin Polreich - PGRF3 - FIM UHK");
+/*        textRenderer.drawStr2D(width-220, 3, " (c) Martin Polreich - PGRF3 - FIM UHK");*/
     }
 
 

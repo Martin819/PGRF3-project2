@@ -82,8 +82,10 @@ public class JOGLApp {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = jFileChooser.getSelectedFile();
             String imagePath = jFileChooser.getSelectedFile().getAbsolutePath();
-            Dimension windowSize = getImageSize(imagePath);
-            ren
+            Dimension imageSize = getImageSize(imagePath);
+            ren.loadImage(imagePath);
+            getFrame().setSize(imageSize);
+            getFrame().setPreferredSize(imageSize);
         }
 
     }
@@ -98,5 +100,8 @@ public class JOGLApp {
             readImage = null;
         }
         return new Dimension(w, h);
+    }
+    private static JFrame getFrame(){
+        return jFrame;
     }
 }
