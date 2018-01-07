@@ -5,6 +5,8 @@ import transforms.Mat4Scale;
 import transforms.Mat4Transl;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.Buffer;
@@ -134,7 +136,8 @@ public class OGLTexture2D implements OGLTexture {
 	static TextureData readTextureDataFromFile(GLProfile glProfile, String fileName) {
 			System.out.print("Reading texture file " + fileName);
 			try {
-				InputStream is = OGLTexture2D.class.getResourceAsStream(fileName);
+/*				InputStream is = OGLTexture2D.class.getResourceAsStream(fileName);*/
+                FileInputStream is = new FileInputStream(fileName);
 				//there are some problems on Mac OS with mipmap, in this case set false
 				TextureData data = TextureIO.newTextureData(glProfile, is, true,
 						getExtension(fileName));

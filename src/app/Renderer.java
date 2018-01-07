@@ -3,20 +3,29 @@ package app;
 import com.jogamp.opengl.GL2GL3;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
 import oglutils.*;
 import transforms.*;
 
+import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import static com.jogamp.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
 
 public class Renderer implements GLEventListener, MouseListener,
         MouseMotionListener, KeyListener {
 
     private OGLTextRenderer textRenderer;
-    private int shaderProgram;
-    private int locImageHeight, locImageWidth;
-    private float imageHeight=512f, imageWidth=512f;
+    static final int LINEAR = 0, SIMPLE_REINHARD = 1, LUMA_REINHARD = 2, ROMBINDAHOUSE = 3, FILMIC = 4, UNCHARTED = 5, ORIGINAL = 6;
+    private int shaderProgram, mappingType = 6;
+    private int locImageHeight, locImageWidth, locExposure, locGamma, locLumaR, locLumaG, locLumaB, locMapType, locMat;
+    private float imageHeight=1024f, imageWidth=768f, exposure=1.2f, gamma=0.7f, lumaR=0.2126f, lumaG=0.7152f, lumaB=0.0722f;
     private int width, height;
-    private String imagePath = "/res/testTexture.jpg";
+    private String imagePath;
     private boolean imageChanged = false;
     private Camera cam = new Camera();
     private Mat4 proj;
@@ -41,8 +50,12 @@ public class Renderer implements GLEventListener, MouseListener,
         gl.glUseProgram(shaderProgram);
         locImageHeight = gl.glGetUniformLocation(shaderProgram, "imageHeight");
         locImageWidth = gl.glGetUniformLocation(shaderProgram, "imageWidth");
-/*        locMatGrid = gl.glGetUniformLocation(shaderProgram, "mat");
-        locImage = gl.glGetUniformLocation(shaderProgram, "image");*/
+        locExposure = gl.glGetUniformLocation(shaderProgram, "exposure");
+        locGamma = gl.glGetUniformLocation(shaderProgram, "gamma");
+        locLumaR = gl.glGetUniformLocation(shaderProgram, "lumaR");
+        locLumaG = gl.glGetUniformLocation(shaderProgram, "lumaG");
+        locLumaB = gl.glGetUniformLocation(shaderProgram, "lumaB");
+        locMapType = gl.glGetUniformLocation(shaderProgram, "mappingType");
         createBuffers();
     }
 
@@ -63,35 +76,69 @@ public class Renderer implements GLEventListener, MouseListener,
 
     @Override
     public void display(GLAutoDrawable glDrawable) {
-//        GL2GL3 gl = glDrawable.getGL().getGL2GL3();
         gl.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         gl.glClear(GL2GL3.GL_COLOR_BUFFER_BIT | GL2GL3.GL_DEPTH_BUFFER_BIT);
         gl.glUniform1f(locImageHeight, imageHeight);
         gl.glUniform1f(locImageWidth, imageWidth);
-//        gl.glUniform1f(locEffectIntensity, effectIntesity);
-/*        if(this.imageChanged){*/
+        gl.glUniform1f(locExposure, exposure);
+        gl.glUniform1f(locGamma, gamma);
+        gl.glUniform1f(locLumaR, lumaR);
+        gl.glUniform1f(locLumaG, lumaG);
+        gl.glUniform1f(locLumaB, lumaB);
+        gl.glUniform1f(locMapType, mappingType);
+        if(this.imageChanged){
             image = new OGLTexture2D(gl, imagePath);
             this.imageChanged=false;
             image.bind(shaderProgram, "image", 0);
-/*        }*/
-
-        // vykresleni
+        }
         buff.draw(GL2GL3.GL_QUADS, shaderProgram);
 /*        textRenderer.drawStr2D(width-220, 3, " (c) Martin Polreich - PGRF3 - FIM UHK");*/
     }
 
-
-    @Override
-    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        this.width = width;
-        this.height = height;
-//        proj = new Mat4PerspRH(Math.PI / 4, height / (double) width, 0.01, 1000.0);
-        textRenderer.updateSize(width, height);
-    }
+        @Override
+        public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+            this.width = width;
+            this.height = height;
+            textRenderer.updateSize(width, height);
+        }
 
     public void loadImage(String imagePath) {
         this.imagePath = imagePath;
         this.imageChanged = true;
+    }
+
+    public BufferedImage getBufferedImage(GLProfile profile){
+        AWTGLReadBufferUtil bufferUtils = new AWTGLReadBufferUtil(profile, false);
+        gl.getContext().makeCurrent();
+        return bufferUtils.readPixelsToBufferedImage(gl, true);
+    }
+
+    public void setExposure(float exposure) {
+        this.exposure = exposure;
+    }
+
+    public void setGamma(float gamma) {
+        this.gamma = gamma;
+    }
+
+    public void setLumaR(float lumaR) {
+        this.lumaR = lumaR;
+    }
+
+    public void setLumaG(float lumaG) {
+        this.lumaG = lumaG;
+    }
+
+    public void setLumaB(float lumaB) {
+        this.lumaB = lumaB;
+    }
+
+    public void setMappingType(int mappingType) {
+        this.mappingType = mappingType;
+    }
+
+    public int getMappingType() {
+        return mappingType;
     }
 
     @Override
