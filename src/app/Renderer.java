@@ -27,8 +27,6 @@ public class Renderer implements GLEventListener, MouseListener,
     private int width, height;
     private String imagePath;
     private boolean imageChanged = false;
-    private Camera cam = new Camera();
-    private Mat4 proj;
     private OGLBuffers buff;
     private OGLTexture2D image;
     private GL2GL3 gl;
@@ -92,7 +90,6 @@ public class Renderer implements GLEventListener, MouseListener,
             image.bind(shaderProgram, "image", 0);
         }
         buff.draw(GL2GL3.GL_QUADS, shaderProgram);
-/*        textRenderer.drawStr2D(width-220, 3, " (c) Martin Polreich - PGRF3 - FIM UHK");*/
     }
 
         @Override
@@ -121,24 +118,8 @@ public class Renderer implements GLEventListener, MouseListener,
         this.gamma = gamma;
     }
 
-    public void setLumaR(float lumaR) {
-        this.lumaR = lumaR;
-    }
-
-    public void setLumaG(float lumaG) {
-        this.lumaG = lumaG;
-    }
-
-    public void setLumaB(float lumaB) {
-        this.lumaB = lumaB;
-    }
-
     public void setMappingType(int mappingType) {
         this.mappingType = mappingType;
-    }
-
-    public int getMappingType() {
-        return mappingType;
     }
 
     @Override

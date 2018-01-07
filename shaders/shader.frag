@@ -28,7 +28,7 @@ vec3 hsv2rgb(vec3 c) {
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }*/
-
+vec2 newPosition = (vertInPos+1)/2;
 vec3 linearToneMapping(vec3 color)
 {
 	color = clamp(exposure * color, 0., 1.);
@@ -85,7 +85,7 @@ vec3 uncharted2ToneMapping(vec3 color)
 }
 
 void main() {
-    vec4 color = texture2D(image, vertInPos);
+    vec4 color = texture2D(image, newPosition);
     if(mappingType == 0){
         color.rgb = linearToneMapping(color.rgb);
     }

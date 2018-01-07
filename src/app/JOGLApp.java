@@ -37,12 +37,6 @@ public class JOGLApp {
     private static JLabel jExposureSliderValue;
     private static JSlider jGammaSlider;
     private static JLabel jGammaSliderValue;
-    private static JSlider jLumaRSlider;
-    private static JLabel jLumaRSliderValue;
-    private static JSlider jLumaGSlider;
-    private static JLabel jLumaGSliderValue;
-    private static JSlider jLumaBSlider;
-    private static JLabel jLumaBSliderValue;
     private static String mappingType;
     public static void main(String[] args) {
 
@@ -208,7 +202,6 @@ public class JOGLApp {
         jGammaSlider.setMajorTickSpacing(10);
         jGammaSlider.setMinorTickSpacing(5);
         jGammaSlider.setPaintTicks(true);
-/*        Hashtable labelTable = new Hashtable();*/
         labelTable.put(jGammaSlider.getMinimum(), new JLabel("0") );
         labelTable.put(jGammaSlider.getMaximum(), new JLabel("5") );
         jGammaSlider.setLabelTable( labelTable );
@@ -228,79 +221,6 @@ public class JOGLApp {
         menuBar.add(jGammaSlider);
         menuBar.add(Box.createHorizontalGlue());
 
-/*        *//* LumaR SLIDER *//*
-        jLumaRSlider = new JSlider(0, 1000);
-        jLumaRSlider.setMajorTickSpacing(100);
-        jLumaRSlider.setMinorTickSpacing(50);
-        jLumaRSlider.setPaintTicks(true);
-        Hashtable lumaTable = new Hashtable();
-        lumaTable.put(jLumaRSlider.getMinimum(), new JLabel("0") );
-        lumaTable.put(jLumaRSlider.getMaximum(), new JLabel("1") );
-        jLumaRSlider.setLabelTable( lumaTable );
-        jLumaRSlider.setPaintLabels(true);
-        jLumaRSlider.setValue(7);
-        jLumaRSlider.setEnabled(true);
-        JLabel jLumaRSliderLabel = new JLabel("LumaR:  ", JLabel.CENTER);
-        jLumaRSliderValue = new JLabel(String.valueOf((float) jLumaRSlider.getValue() / 1000));
-        jLumaRSliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        jLumaRSlider.addChangeListener(e1 -> {
-            ren.setLumaR((float) jLumaRSlider.getValue() / 1000);
-            updateSliderValue();
-        });
-        menuBar.add(jLumaRSliderLabel);
-        menuBar.add(jLumaRSliderValue);
-        menuBar.add(Box.createRigidArea(new Dimension(15, 10)));
-        menuBar.add(jLumaRSlider);
-        menuBar.add(Box.createHorizontalGlue());
-
-        *//* LumaG SLIDER *//*
-        jLumaGSlider = new JSlider(0, 1000);
-        jLumaGSlider.setMajorTickSpacing(100);
-        jLumaGSlider.setMinorTickSpacing(50);
-        jLumaGSlider.setPaintTicks(true);
-        lumaTable.put(jLumaGSlider.getMinimum(), new JLabel("0") );
-        lumaTable.put(jLumaGSlider.getMaximum(), new JLabel("1") );
-        jLumaGSlider.setLabelTable( lumaTable );
-        jLumaGSlider.setPaintLabels(true);
-        jLumaGSlider.setValue(7);
-        jLumaGSlider.setEnabled(true);
-        JLabel jLumaGSliderLabel = new JLabel("LumaG:  ", JLabel.CENTER);
-        jLumaGSliderValue = new JLabel(String.valueOf((float) jLumaGSlider.getValue() / 1000));
-        jLumaGSliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        jLumaGSlider.addChangeListener(e1 -> {
-            ren.setLumaG((float) jLumaGSlider.getValue() / 1000);
-            updateSliderValue();
-        });
-        menuBar.add(jLumaGSliderLabel);
-        menuBar.add(jLumaGSliderValue);
-        menuBar.add(Box.createRigidArea(new Dimension(15, 10)));
-        menuBar.add(jLumaGSlider);
-        menuBar.add(Box.createHorizontalGlue());
-
-        *//* LumaB SLIDER *//*
-        jLumaBSlider = new JSlider(0, 1000);
-        jLumaBSlider.setMajorTickSpacing(100);
-        jLumaBSlider.setMinorTickSpacing(50);
-        jLumaBSlider.setPaintTicks(true);
-        lumaTable.put(jLumaBSlider.getMinimum(), new JLabel("0") );
-        lumaTable.put(jLumaBSlider.getMaximum(), new JLabel("1") );
-        jLumaBSlider.setLabelTable( lumaTable );
-        jLumaBSlider.setPaintLabels(true);
-        jLumaBSlider.setValue(7);
-        jLumaBSlider.setEnabled(true);
-        JLabel jLumaBSliderLabel = new JLabel("LumaB:  ", JLabel.CENTER);
-        jLumaBSliderValue = new JLabel(String.valueOf((float) jLumaBSlider.getValue() / 1000));
-        jLumaBSliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        jLumaBSlider.addChangeListener(e1 -> {
-            ren.setLumaB((float) jLumaBSlider.getValue() / 1000);
-            updateSliderValue();
-        });
-        menuBar.add(jLumaBSliderLabel);
-        menuBar.add(jLumaBSliderValue);
-        menuBar.add(Box.createRigidArea(new Dimension(15, 10)));
-        menuBar.add(jLumaBSlider);
-        menuBar.add(Box.createHorizontalGlue());*/
-
         /* INFO */
         JButton btnAbout = new JButton("info");
         btnAbout.setFocusable(false);
@@ -309,7 +229,13 @@ public class JOGLApp {
                         "USAGE:\n\nClick 'Choose Image' button to open the image. (JPG and PNG files are supported)" +
                         "\nClick the 'Mapping type' to select desired Tone mapping type. " +
                         "\nUse the sliders to adjust Exposure and Gamma of the tone mapping. (Availability varies for each mapping type)" +
-                        "\nClick 'Save image' to save the edited image to the computer.","About",JOptionPane.INFORMATION_MESSAGE));
+                        "\nClick 'Save image' to save the edited image to the computer.\n\n" +
+                        "EXAMPLE PRESETS:\n\nLinear --> Exposure = 1.2, Gamma = 0.4" +
+                        "\nSimple Reinhard --> Exposure = 1.5, Gamma = 0.5" +
+                        "\nRomBinDaHouse --> Gamma = 0.5" +
+                        "\nUncharted --> Exposure = 3.0, Gamma = 0.8\n\n" +
+                        "NOTE: Uncharted type shows tone mapping used in Uncharted 2 PC game\n" +
+                        "NOTE 2: See Readme.md file for references","About",JOptionPane.INFORMATION_MESSAGE));
         menuBar.add(btnAbout);
         return menuBar;
 
