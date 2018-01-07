@@ -30,6 +30,7 @@ public class JOGLApp {
     private static GLProfile profile;
     private static GLCapabilities capabilities;
     private static JFrame jFrame;
+    private static JMenuBar menuBar;
     private static JButton jOpenButton;
     private static JButton jSaveButton;
     private static JFileChooser jFileChooser;
@@ -73,7 +74,7 @@ public class JOGLApp {
         }
     }
     private static JMenuBar getMenus() {
-        JMenuBar menuBar = new JMenuBar();
+        menuBar = new JMenuBar();
         menuBar.setBorder(BorderFactory.createMatteBorder(1, 1, 2, 1, Color.BLACK));
         jOpenButton = new JButton("Choose Image");
         jOpenButton.addActionListener(JOGLApp::ChooseImageButtonActionPerformed);
@@ -226,14 +227,16 @@ public class JOGLApp {
         btnAbout.setFocusable(false);
         btnAbout.addActionListener(e -> JOptionPane.showMessageDialog(getFrame(),
                 "This project demonstrates basic tone mapping algorithms on the images.\n\n" +
-                        "USAGE:\n\nClick 'Choose Image' button to open the image. (JPG and PNG files are supported)" +
+                        "USAGE:\n" +
+                        "\nClick 'Choose Image' button to open the image. (JPG and PNG files are supported)" +
                         "\nClick the 'Mapping type' to select desired Tone mapping type. " +
                         "\nUse the sliders to adjust Exposure and Gamma of the tone mapping. (Availability varies for each mapping type)" +
                         "\nClick 'Save image' to save the edited image to the computer.\n\n" +
-                        "EXAMPLE PRESETS:\n\nLinear --> Exposure = 1.2, Gamma = 0.4" +
-                        "\nSimple Reinhard --> Exposure = 1.5, Gamma = 0.5" +
-                        "\nRomBinDaHouse --> Gamma = 0.5" +
-                        "\nUncharted --> Exposure = 3.0, Gamma = 0.8\n\n" +
+                        "EXAMPLE PRESETS:\n" +
+                        "\nLinear ---------------- Exposure = 1.2, Gamma = 0.4-0.5" +
+                        "\nSimple Reinhard -- Exposure = 1.5, Gamma = 0.5" +
+                        "\nRomBinDaHouse -- Gamma = 0.5" +
+                        "\nUncharted ----------- Exposure = 3.0, Gamma = 0.8\n\n" +
                         "NOTE: Uncharted type shows tone mapping used in Uncharted 2 PC game\n" +
                         "NOTE 2: See Readme.md file for references","About",JOptionPane.INFORMATION_MESSAGE));
         menuBar.add(btnAbout);
@@ -287,7 +290,7 @@ public class JOGLApp {
         int h=0,w=0;
         try {
             readImage = ImageIO.read(new File(imagePath));
-            h = readImage.getHeight();
+            h = readImage.getHeight() + menuBar.getHeight();
             w = readImage.getWidth();
             System.out.println("w: " + w + "\nh: " + h);
         } catch (Exception e) {
